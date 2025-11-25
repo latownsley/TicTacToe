@@ -10,6 +10,7 @@ void updateMove(std::string playerName, std::string marker, std::array<std::stri
 
 bool checkEndGameConditions(std::array<std::string, 9>& gameboard, std::string playerOne, std::string playerTwo);
 
+bool inputValidation(int input, std::array<std::string, 9>& gameboard);
 
 // ******** Main *********
 int main() {
@@ -55,6 +56,12 @@ int main() {
 }
 
 // ******** Functions **********
+/**
+ * @brief Shows the gameboard
+ * 
+ * @param gameboard The gameboard
+ * @return 
+ */
 void showGameBoard(std::array<std::string, 9>& gameboard) {
     for (int i = 0; i <= 8; i++){
         std::cout << gameboard[i];
@@ -72,14 +79,27 @@ void showGameBoard(std::array<std::string, 9>& gameboard) {
     }
 }
 
+/**
+ * @brief Updates the gameboard with new move
+ * 
+ * @param playerName The player's name.
+ * @param marker The symbol "X" or "O", depending on the player.
+ * @param gameboard The gameboard
+ * @return 
+ */
 void updateMove(std::string playerName, std::string marker, std::array<std::string, 9>& gameboard) {
     int position;  // holds array index to update
     std::string positionString;
+    bool validated = false;
 
     // get new move
-    std::cout << playerName << ", please enter a position number (0-8): ";
-    std::cin >> positionString;
-    position = std::stoi(positionString);
+    while (validated == false) {
+        std::cout << playerName << ", please enter a position number (0-8): "<< "\n";
+        std::cin >> positionString;
+        position = std::stoi(positionString);
+        validated = inputValidation(position, gameboard);
+    }
+    
 
     // update gameboard
     gameboard[position] = marker;
@@ -87,6 +107,30 @@ void updateMove(std::string playerName, std::string marker, std::array<std::stri
 
 }
 
+/**
+ * @brief Verifies user input.
+ * 
+ * @param input The user inputed integer.
+ * @param gameboard The gameboard.
+ * @return A bool representing if the input was validated or not.
+ */
+bool inputValidation(int input, std::array<std::string, 9>& gameboard) {
+    if (gameboard[input] == "X" || gameboard[input] == "O") {
+        std::cout << "\nThis spot has already been chosen. Please choose a new position.";
+        return false;
+    }
+
+    return true;
+}
+
+
+/**
+ * @brief Checks End Game Conditions.
+ * 
+ * @param gameboard The array that holds the gameboard.
+ * @param playerOne The playerOne name string.
+ * @return A bool representing if the game is over or not.
+ */
 bool checkEndGameConditions(std::array<std::string, 9>& gameboard, std::string playerOne, std::string playerTwo) {
     std::string winningMarker;
     bool won = false;
